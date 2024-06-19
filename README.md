@@ -1,29 +1,36 @@
 <html lang="ko">
 <head>
     <meta charset="utf-8">
-    <title>2024-06-14최종</title>
+    <title>2024-06-19최종_인포윈도우추가</title>
     <style>
-         .map_wrap {
+    
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .map_wrap {
             position: relative;
             overflow: hidden;
-            width: 100vh;
-            height: 100vh
+            width: 100%;
+            height: 900px;
         }
         .radius_border {
-            border: 3px solid #54c681;
+            border: 3px solid #e9e9e9;
             border-radius: 10px;
         }
         .custom_typecontrol {
             position: absolute;
-            top: 10px;
+            top: 8px;
             left: 10px;
             overflow: hidden;
-            width: 150px;
-            height: 120px; /* Adjusted height to accommodate multiple buttons */
+            width: 180px;
+            height: 130px; /* Adjusted height to accommodate multiple buttons */
             margin: 0;
             padding: 0;
             z-index: 1;
-            font-size: 14px;
+            font-size: 12px;
             font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
             box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
         }
@@ -57,6 +64,7 @@
             overflow: hidden;
             z-index: 1;
             background-color: #f5f5f5;
+            z-index: 10; /* 지도 위로 나타나도록 설정 */
         }
         .custom_zoomcontrol span {
             display: block;
@@ -84,6 +92,7 @@
             box-shadow: 0 0 5px rgba(0,0,0,0.5);
             display: none; /* Initially hidden */
             flex-wrap: wrap; /* Ensure items wrap properly */
+            z-index: 10; /* 지도 위로 나타나도록 설정 */
         }
         .legend-column {
             display: flex;
@@ -101,16 +110,30 @@
             height: 20px;
             margin-right: 10px;
         }
+        #출처 {
+            position: absolute;
+            bottom: 10px; /* 지도와 출처 박스의 하단 간격 */
+            left: 10px;  /* 지도와 출처 박스의 좌측 간격 */
+            padding: 5px 10px; /* 박스 내부의 여백 */
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.253);
+            border-radius: 5px;
+            font-size: 15px;
+            color: #333333;
+            z-index: 10; /* 지도 위로 나타나도록 설정 */
+        }
+
     </style>
 </head>
 
 <body>
-    <div class="map_wrap">
-        <div id="map-container" style="width: 100vh; height: 100vh;"></div>
+    <div id="출처">자료출처: 중앙선거관리위원회</div>
+      <div class="map_wrap">
+        <div id="map-container" style="width: 100%; height: 100%;"></div>
         <div class="custom_typecontrol radius_border">
-            <span id="togglePolygonA">2017결과</span>
-            <span id="togglePolygonB">2020결과</span>
-            <span id="togglePolygonC">2030결과</span>
+            <span id="togglePolygonA">제19대 대통령 선거[2017]</span>
+            <span id="togglePolygonB">제20대 대통령 선거[2022]</span>
+            <span id="togglePolygonC">제20대 대선[서울시 개표결과]</span>
         </div>
         <div class="custom_zoomcontrol radius_border">
             <span id="zoomIn"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png" alt="확대"></span>
@@ -121,6 +144,7 @@
     <!-- 범례 -->
     <div class="legend" id="legend">
         <div class="legend-column">
+            <div class="legend-header" style="font-weight: bold;">국민의힘 (후보 윤석열)</div>
             <div class="legend-item">
                 <div class="color-box" style="background-color: #7D160F;"></div> 65% ~ 70% 
             </div>
@@ -138,6 +162,7 @@
             </div>
         </div>
         <div class="legend-column">
+            <div class="legend-header" style="font-weight: bold;">더불어민주당 (후보 이재명)</div>
             <div class="legend-item">
                 <div class="color-box" style="background-color: #0074BD;"></div> 50% ~ 55%
             </div>
@@ -146,13 +171,14 @@
             </div>
         </div>
     </div>
+    
 
     <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ea5c4da1be0c4db650f766d2185effb6"></script>
     <script>
         var mapContainer = document.getElementById('map-container');
         var mapOption = {
             center: new kakao.maps.LatLng(37.5665851, 126.9782038), // 용산구 중심 좌표
-            level: 9, // 지도 레벨
+            level: 8, // 지도 레벨
             mapTypeId : kakao.maps.MapTypeId.ROADMAP // 지도 유형
         }; 
 
@@ -6132,6 +6158,445 @@ var gangdongPolygonC = new kakao.maps.Polygon({
             var level = map.getLevel() + 1;
             map.setLevel(level, { animate: true });
         });
+
+        // 용산구 인포윈도우
+var contentA = '<div style="padding:5px;">용산구 득표율 56.4%</div>';
+var infowindowA = new kakao.maps.InfoWindow({
+    content: contentA, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(yongsanPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowA.setPosition(mouseEvent.latLng); 
+    infowindowA.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(yongsanPolygonC, 'mouseout', function() { 
+    infowindowA.close(); 
+}); 
+
+// 동대문구 인포윈도우 B
+var contentB = '<div style="padding:5px;">동대문구 득표율 49.2%</div>';
+var infowindowB = new kakao.maps.InfoWindow({
+    content: contentB, 
+    removable: false 
+});
+
+// 다각형 B에 마우스오버 이벤트 등록
+kakao.maps.event.addListener(dongdaemunPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowB.setPosition(mouseEvent.latLng); 
+    infowindowB.open(map); 
+});   
+
+// 다각형 B에 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(dongdaemunPolygonC, 'mouseout', function() { 
+    infowindowB.close(); 
+});
+
+//  성동구 인포윈도우 C
+var contentC = '<div style="padding:5px;">성동구 득표율 53.2%</div>';
+var infowindowC = new kakao.maps.InfoWindow({
+    content: contentC, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(seungdongPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowC.setPosition(mouseEvent.latLng); 
+    infowindowC.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(seungdongPolygonC, 'mouseout', function() { 
+    infowindowC.close(); 
+});
+
+    // 종로구 인포윈도우 D
+var contentD = '<div style="padding:5px;">종로구 득표율 49.5%</div>';
+var infowindowD = new kakao.maps.InfoWindow({
+    content: contentD, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(jongnoPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowD.setPosition(mouseEvent.latLng); 
+    infowindowD.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(jongnoPolygonC, 'mouseout', function() { 
+    infowindowD.close(); 
+});
+
+// 중구 인포윈도우 F
+var contentF = '<div style="padding:5px;">중구 득표율 51.0%</div>';
+var infowindowF = new kakao.maps.InfoWindow({
+    content: contentF, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(jungPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowF.setPosition(mouseEvent.latLng); 
+    infowindowF.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(jungPolygonC, 'mouseout', function() { 
+    infowindowF.close(); 
+});
+
+// 광진구 인포윈도우 E
+var contentE = '<div style="padding:5px;">광진구 득표율 48.8%</div>';
+var infowindowE = new kakao.maps.InfoWindow({
+    content: contentE, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(gwangjinPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowE.setPosition(mouseEvent.latLng); 
+    infowindowE.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(gwangjinPolygonC, 'mouseout', function() { 
+    infowindowE.close(); 
+});
+// 중랑구 인포윈도우 F
+var contentF = '<div style="padding:5px;">중랑구 득표율 50.5%</div>';
+var infowindowF = new kakao.maps.InfoWindow({
+    content: contentF, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(jungnangPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowF.setPosition(mouseEvent.latLng); 
+    infowindowF.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(jungnangPolygonC, 'mouseout', function() { 
+    infowindowF.close(); 
+});
+
+// 성북구 인포윈도우 G
+var contentG = '<div style="padding:5px;">성북구 득표율 49.3%</div>';
+var infowindowG = new kakao.maps.InfoWindow({
+    content: contentG, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(seongbukPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowG.setPosition(mouseEvent.latLng); 
+    infowindowG.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(seongbukPolygonC, 'mouseout', function() { 
+    infowindowG.close(); 
+});
+
+// 강북구 인포윈도우 H
+var contentH = '<div style="padding:5px;">강북구 득표율 52.3%</div>';
+var infowindowH = new kakao.maps.InfoWindow({
+    content: contentH, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(gangbukPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowH.setPosition(mouseEvent.latLng); 
+    infowindowH.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(gangbukPolygonC, 'mouseout', function() { 
+    infowindowH.close(); 
+});
+
+// 도봉구 인포윈도우 I
+var contentI = '<div style="padding:5px;">도봉구 득표율 49.8%</div>';
+var infowindowI = new kakao.maps.InfoWindow({
+    content: contentI, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(dobongPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowI.setPosition(mouseEvent.latLng); 
+    infowindowI.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(dobongPolygonC, 'mouseout', function() { 
+    infowindowI.close(); 
+});
+// 노원구 인포윈도우 J
+var contentJ = '<div style="padding:5px;">노원구 득표율 48.9%</div>';
+var infowindowJ = new kakao.maps.InfoWindow({
+    content: contentJ, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(nowonPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowJ.setPosition(mouseEvent.latLng); 
+    infowindowJ.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(nowonPolygonC, 'mouseout', function() { 
+    infowindowJ.close(); 
+});
+// 은평구 인포윈도우 K
+var contentK = '<div style="padding:5px;">은평구 득표율 51.3%</div>';
+var infowindowK = new kakao.maps.InfoWindow({
+    content: contentK, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(eunpyeongPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowK.setPosition(mouseEvent.latLng); 
+    infowindowK.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(eunpyeongPolygonC, 'mouseout', function() { 
+    infowindowK.close(); 
+});
+// 서대문구 인포윈도우 L
+var contentL = '<div style="padding:5px;">서대문구 득표율 48.3%</div>';
+var infowindowL = new kakao.maps.InfoWindow({
+    content: contentL, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(seodaemunPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowL.setPosition(mouseEvent.latLng); 
+    infowindowL.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(seodaemunPolygonC, 'mouseout', function() { 
+    infowindowL.close(); 
+});
+// 마포구 인포윈도우 M
+var contentM = '<div style="padding:5px;">마포구 득표율 49.0%</div>';
+var infowindowM = new kakao.maps.InfoWindow({
+    content: contentM, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(mapoPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowM.setPosition(mouseEvent.latLng); 
+    infowindowM.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(mapoPolygonC, 'mouseout', function() { 
+    infowindowM.close(); 
+});
+// 양천구 인포윈도우 N
+var contentN = '<div style="padding:5px;">양천구 득표율 50.1%</div>';
+var infowindowN = new kakao.maps.InfoWindow({
+    content: contentN, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(yangcheonPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowN.setPosition(mouseEvent.latLng); 
+    infowindowN.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(yangcheonPolygonC, 'mouseout', function() { 
+    infowindowN.close(); 
+});
+// 강서구 인포윈도우 O
+var contentO = '<div style="padding:5px;">강서구 득표율 49.2%</div>';
+var infowindowO = new kakao.maps.InfoWindow({
+    content: contentO, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(gangseoPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowO.setPosition(mouseEvent.latLng); 
+    infowindowO.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(gangseoPolygonC, 'mouseout', function() { 
+    infowindowO.close(); 
+});
+// 구로구 인포윈도우 P
+var contentP = '<div style="padding:5px;">구로구 득표율 49.2%</div>';
+var infowindowP = new kakao.maps.InfoWindow({
+    content: contentP, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(guroPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowP.setPosition(mouseEvent.latLng); 
+    infowindowP.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(guroPolygonC, 'mouseout', function() { 
+    infowindowP.close(); 
+});
+
+// 금천구 인포윈도우 Q
+var contentQ = '<div style="padding:5px;">금천구 득표율 51.6%</div>';
+var infowindowQ = new kakao.maps.InfoWindow({
+    content: contentQ, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(geumcheonPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowQ.setPosition(mouseEvent.latLng); 
+    infowindowQ.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(geumcheonPolygonC, 'mouseout', function() { 
+    infowindowQ.close(); 
+});
+// 영등포구 인포윈도우 R
+var contentR = '<div style="padding:5px;">영등포구 득표율 51.6%</div>';
+var infowindowR = new kakao.maps.InfoWindow({
+    content: contentR, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(yeongdeungpoPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowR.setPosition(mouseEvent.latLng); 
+    infowindowR.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(yeongdeungpoPolygonC, 'mouseout', function() { 
+    infowindowR.close(); 
+});
+// 동작구 인포윈도우 S
+var contentS = '<div style="padding:5px;">동작구 득표율 50.5%</div>';
+var infowindowS = new kakao.maps.InfoWindow({
+    content: contentS, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(dongjakPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowS.setPosition(mouseEvent.latLng); 
+    infowindowS.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(dongjakPolygonC, 'mouseout', function() { 
+    infowindowS.close(); 
+});
+// 관악구 인포윈도우 T
+var contentT = '<div style="padding:5px;">관악구 득표율 50.3%</div>';
+var infowindowT = new kakao.maps.InfoWindow({
+    content: contentT, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(gwanakPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowT.setPosition(mouseEvent.latLng); 
+    infowindowT.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(gwanakPolygonC, 'mouseout', function() { 
+    infowindowT.close(); 
+});
+// 서초구 인포윈도우 U
+var contentU = '<div style="padding:5px;">서초구 득표율 66.4%</div>';
+var infowindowU = new kakao.maps.InfoWindow({
+    content: contentU, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(seochoPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowU.setPosition(mouseEvent.latLng); 
+    infowindowU.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(seochoPolygonC, 'mouseout', function() { 
+    infowindowU.close(); 
+});
+
+//  강남구 인포윈도우 V
+var contentV = '<div style="padding:5px;">강남구 득표율 67.0%</div>';
+var infowindowV = new kakao.maps.InfoWindow({
+    content: contentV, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(gangnamPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowV.setPosition(mouseEvent.latLng); 
+    infowindowV.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(gangnamPolygonC, 'mouseout', function() { 
+    infowindowV.close(); 
+});
+
+// 송파구 인포윈도우 W
+var contentW = '<div style="padding:5px;">송파구 득표율 56.8%</div>';
+var infowindowW = new kakao.maps.InfoWindow({
+    content: contentW, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(songpaPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowW.setPosition(mouseEvent.latLng); 
+    infowindowW.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(songpaPolygonC, 'mouseout', function() { 
+    infowindowW.close(); 
+});
+
+// 강동구 인포윈도우 X
+var contentX = '<div style="padding:5px;">강동구 득표율 51.7%</div>';
+var infowindowX = new kakao.maps.InfoWindow({
+    content: contentX, 
+    removable: false 
+});
+
+// 다각형 마우스오버 이벤트 등록
+kakao.maps.event.addListener(gangdongPolygonC, 'mouseover', function(mouseEvent) { 
+    infowindowX.setPosition(mouseEvent.latLng); 
+    infowindowX.open(map); 
+});   
+
+// 다각형 마우스아웃 이벤트 등록
+kakao.maps.event.addListener(gangdongPolygonC, 'mouseout', function() { 
+    infowindowX.close(); 
+});
+
     </script>
 </body>
-</html># geo
+</html>
