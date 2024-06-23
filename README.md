@@ -19,7 +19,7 @@
             left: 10px;
             overflow: hidden;
             width: 180px;
-            height: 205px; /* Adjusted height to accommodate multiple buttons */
+            height: 200px; /* Adjusted height to accommodate multiple buttons */
             margin: 0;
             padding: 0;
             z-index: 1;
@@ -283,7 +283,7 @@
         <div class="custom_typecontrol radius_border">
             <span id="togglePolygonA">[2017년] 제19대 대통령 선거</span>
             <span id="togglePolygonB">[2022년] 제20대 대통령 선거</span>
-            <span id="togglePolygonC">제20대 대선[서울시 개표결과]</span>
+            <span id="togglePolygonC">제20대 대선[서울시 득표결과]</span>
             <span id="togglePolygonD">제20대 대선[서울시 인구통계]</span>
             <span id="togglePolygonE">제20대 대선[서울시 수준지수]</span>
         </div>
