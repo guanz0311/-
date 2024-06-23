@@ -19,7 +19,7 @@
             left: 10px;
             overflow: hidden;
             width: 180px;
-            height: 200px; /* Adjusted height to accommodate multiple buttons */
+            height: 210px; /* Adjusted height to accommodate multiple buttons */
             margin: 0;
             padding: 0;
             z-index: 1;
