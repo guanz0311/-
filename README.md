@@ -273,10 +273,6 @@
             font-size: 10px;
             text-align: center;
         }
-
-
-    </style>
-
     </style>
 </head>
 
@@ -321,7 +317,7 @@
         </div>
         <div class="single-bar">
             <div class="bar blue" id="bar-blue" style="width: 42.3%;">
-                <span>42.3%%</span>
+                <span>42.3%</span>
             </div>
             <div class="bar red" id="bar-red" style="width: 20.8%;">
                 <span>20.8%</span>
